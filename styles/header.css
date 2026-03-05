@@ -1,0 +1,32 @@
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  height: var(--header-height);
+  width: 100%;
+
+  background-color: var(--header_background);
+  box-shadow: 0 1px 2px var(--header-border-color);
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 calc(0.25rem * 2);
+  margin: auto;
+
+  height: 100%;
+  max-width: var(--main-max-width);
+}
+
+a > .title {
+  font-size: 1.5rem;
+}
+
+.header-button-wrap {
+  display: flex;
+  gap: 10px;
+}

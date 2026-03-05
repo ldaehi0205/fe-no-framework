@@ -1,0 +1,11 @@
+{
+  "title": "Next.js App Router와 Pages Router 중 어떤 걸 선택해야 할까요?",
+  "category": "개발",
+  "author": "김민준",
+  "date": "2026-03-03",
+  "sections": {
+    "distinction": "질문",
+    "description": "신규 프로젝트를 시작하려고 하는데 Next.js 13 이후의 App Router를 써야 할지, 안정적인 Pages Router를 유지해야 할지 고민입니다. 실무에서 App Router로 전환하신 분들의 경험이 궁금합니다.",
+    "appName": null
+  }
+}

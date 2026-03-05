@@ -1,0 +1,52 @@
+.post-table {
+  width: 100%;
+  padding: calc(0.25rem * 6);
+  border-collapse: collapse;
+}
+
+.post-table th {
+  padding: calc(0.25rem * 3) calc(0.25rem);
+  color: #919191;
+  line-height: 1.2;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.post-table thead {
+  border-bottom: 3px solid #e9e9e9;
+}
+
+.post-table tbody tr {
+  border-bottom: 1px solid #e9e9e9;
+  cursor: pointer;
+}
+
+.post-table thead .post-comments {
+  width: 4rem;
+  text-align: center;
+}
+.post-table thead .post-views {
+  width: 5rem;
+  text-align: center;
+}
+.post-table thead .post-activity {
+  width: 5rem;
+  text-align: center;
+}
+
+.post-table .cell {
+  height: 29px;
+  padding: 0.75rem 0;
+  cursor: pointer;
+}
+
+.post-table .cell-comments {
+  text-align: center;
+}
+
+.post-table .cell-views {
+  text-align: center;
+}
+.post-table .cell-activity {
+  text-align: center;
+}

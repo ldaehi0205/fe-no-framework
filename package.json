@@ -1,0 +1,11 @@
+{
+  "name": "fe-blog-no-framework",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve -s ."
+  },
+  "author": "",
+  "license": "ISC"
+}

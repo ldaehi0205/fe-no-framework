@@ -1,0 +1,11 @@
+{
+  "title": "React에서 전역 상태 관리를 어떻게 해야 할까요?",
+  "category": "개발",
+  "author": "이대희",
+  "date": "2026-03-04",
+  "sections": {
+    "distinction": "질문",
+    "description": "현재 프로젝트에서 props drilling이 너무 깊어져서 전역 상태 관리 도입을 고민 중입니다. Redux, Zustand, Context API 중 어떤 걸 선택하는 게 좋을지 의견이 궁금합니다.",
+    "appName": "사내 대시보드 프로젝트"
+  }
+}
