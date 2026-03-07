@@ -5,20 +5,26 @@ export const navigate = path => {
   window.dispatchEvent(new PopStateEvent('popstate'));
 };
 
-export const onRoute = callback => {
+const onRoute = callback => {
   window.addEventListener('popstate', () => {
     callback(window.location.pathname);
   });
 };
 
+const getComponent = pathname => {
+  const CATEGORY_PATHS = ['/', '/latest', '/dev', '/notice'];
+
+  if (CATEGORY_PATHS.includes(pathname)) return 'post-table';
+  if (pathname.includes('/post/')) return 'post-detail';
+  return null;
+};
+
 const changeView = pathname => {
   const content = document.querySelector('.post-content');
+  const component = getComponent(pathname);
+  if (!content || !component) return;
 
-  if (pathname === '/') {
-    content.replaceChildren(document.createElement('post-table'));
-  } else if (pathname.includes('/post/')) {
-    content.replaceChildren(document.createElement('post-detail'));
-  }
+  content.replaceChildren(document.createElement(component));
 };
 
 changeView(window.location.pathname);
