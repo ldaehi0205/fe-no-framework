@@ -28,3 +28,9 @@
 
   border-right: 1px solid var(--sidebar-border-color);
 }
+
+.content-error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--danger);
+}
