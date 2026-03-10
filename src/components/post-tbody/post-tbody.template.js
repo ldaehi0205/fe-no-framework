@@ -1,30 +1,33 @@
-const createPostTable = posts => {
+const createPostRows = posts => {
   return `
-    <table class="post-table">
-      <thead>
-        <tr>
-          <th>글</th>
-          <th class="post-comments">댓글</th>
-          <th class="post-views">조회수</th>
-          <th class="post-activity">활동</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${posts
-          .map(
-            ({ id, title, comments, views, activity }) => `
-          <tr data-set="${id}">
+	 ${posts
+     .map(
+       ({ id, title, comments, views, activity }) => `
+          <tr id="row-${id}" data-id="${id}">
+            <td class="cell cell-id">${id}</td>
             <td class="cell cell-title">${title}</td>
             <td class="cell cell-comments">${comments}</td>
             <td class="cell cell-views">${views}</td>
             <td class="cell cell-activity">${activity}</td>
           </tr>
         `,
-          )
-          .join('')}
+     )
+     .join('')}`;
+};
+
+const createPostTable = () => `
+    <table class="post-table">
+      <thead>
+        <tr>
+					<th class="post-id">ID</th>
+          <th>글</th>
+          <th class="post-comments">댓글</th>
+          <th class="post-views">조회수</th>
+          <th class="post-activity">활동</th>
+        </tr>
+      </thead>
+      <tbody id="post-tbody">      
       </tbody>
     </table>
   `;
-};
-
-export default createPostTable;
+export { createPostTable, createPostRows };
