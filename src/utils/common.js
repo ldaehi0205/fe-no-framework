@@ -2,11 +2,13 @@ import { CATEGORY_PATHS } from '../../constant/routePath.js';
 
 export const getCategoryFromPath = () => {
   const { pathname } = window.location;
-  return (
+
+  const categoryPath =
     CATEGORY_PATHS.find(
       path => pathname === path || pathname.startsWith(`${path}/`),
-    ) || ''
-  );
+    ) || '';
+
+  return categoryPath.startsWith('/') ? categoryPath.slice(1) : categoryPath;
 };
 
 export const errorBoundary = component => {
