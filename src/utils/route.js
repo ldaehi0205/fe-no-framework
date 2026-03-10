@@ -1,3 +1,5 @@
+import { RoutePath } from '../../constant/routePath.js';
+
 export const navigate = path => {
   // 브라우저 히스토리에 새로운 엔트리를 추가하고, URL을 변경
   history.pushState(null, '', path);
@@ -5,21 +7,6 @@ export const navigate = path => {
   window.dispatchEvent(new PopStateEvent('popstate'));
 };
 
-export const onRoute = callback => {
-  window.addEventListener('popstate', () => {
-    callback(window.location.pathname);
-  });
+export const goToPostDetail = postId => {
+  navigate(`${RoutePath.post}/${postId}`);
 };
-
-const changeView = pathname => {
-  const content = document.querySelector('.post-content');
-
-  if (pathname === '/') {
-    content.replaceChildren(document.createElement('post-table'));
-  } else if (pathname.includes('/post/')) {
-    content.replaceChildren(document.createElement('post-detail'));
-  }
-};
-
-changeView(window.location.pathname);
-onRoute(changeView);

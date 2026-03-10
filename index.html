@@ -18,7 +18,11 @@
       type="module"
       src="/src/components/post-detail/post-detail.component.js"
     ></script>
-    <script type="module" src="/src/utils/route.js"></script>
+    <script
+      type="module"
+      src="/src/components/sidebar/sidebar.component.js"
+    ></script>
+    <script type="module" src="/src/utils/renderView.js"></script>
     <title>Document</title>
   </head>
   <body>
@@ -36,26 +40,7 @@
     <div id="main-wrap">
       <!-- sidebar -->
       <section class="sidebar">
-        <ul class="sidebar-content">
-          <li class="sidebar-row active">
-            <a>
-              <span class="sidebar-row-icon">📖</span>
-              <span class="sidebar-row-text">최신 글</span>
-            </a>
-          </li>
-          <li class="sidebar-row">
-            <a>
-              <span class="sidebar-row-icon">💻</span>
-              <span class="sidebar-row-text">개발</span>
-            </a>
-          </li>
-          <li class="sidebar-row">
-            <a>
-              <span class="sidebar-row-icon">💡</span>
-              <span class="sidebar-row-text">개발 공지사항</span>
-            </a>
-          </li>
-        </ul>
+        <side-bar></side-bar>
       </section>
       <!-- content -->
       <section class="post-content">

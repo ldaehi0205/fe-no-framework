@@ -1,12 +1,18 @@
 import createPostDetail from './post-detail.template.js';
 import PostService from '../../api/PostService.js';
 
+import { errorBoundary } from '../../utils/common.js';
+
 class PostDetail extends HTMLElement {
   async connectedCallback() {
-    const endpoint = window.location.pathname.split('/').pop();
+    try {
+      const endpoint = window.location.pathname.split('/').pop();
 
-    const post = await PostService.getPostDetail(endpoint);
-    this.innerHTML = createPostDetail(post);
+      const post = await PostService.getPostDetail(endpoint);
+      this.innerHTML = createPostDetail(post);
+    } catch {
+      errorBoundary(this);
+    }
   }
 }
 
