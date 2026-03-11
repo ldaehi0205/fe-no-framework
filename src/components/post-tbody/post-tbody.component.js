@@ -2,7 +2,11 @@ import { createPostTable, createPostRows } from './post-tbody.template.js';
 import PostService from '../../api/PostService.js';
 
 import { goToPostDetail } from '../../utils/route.js';
-import { getCategoryFromPath, errorBoundary } from '../../utils/common.js';
+import {
+  getCategoryFromPath,
+  errorBoundary,
+  createEscapeHtml,
+} from '../../utils/common.js';
 
 class PostTable extends HTMLElement {
   #offsetPostID = 0;
@@ -11,26 +15,22 @@ class PostTable extends HTMLElement {
   #observer = null;
 
   #observe = () => {
-    const id = this.#offsetPostID;
-    if (this.querySelector(`#row-${id}`)) {
-      this.#observer.observe(this.querySelector(`#row-${this.#offsetPostID}`));
-    }
+    const el = this.querySelector(`#row-${this.#offsetPostID}`);
+    if (el) this.#observer.observe(el);
   };
 
   #unobserve = () => {
-    const id = this.#offsetPostID;
-    if (this.querySelector(`#row-${id}`)) {
-      this.#observer.unobserve(this.querySelector(`#row-${id}`));
-    }
+    const el = this.querySelector(`#row-${this.#offsetPostID}`);
+    if (el) this.#observer.unobserve(el);
   };
 
   #fetchError = () => {
-    this.querySelector('tbody').innerHTML = `<tr>
+    this.querySelector('tbody').appendChild(`<tr>
           <td colspan="5" class="content-error">
             데이터를 불러오지 못했습니다.
             <button class="retry-btn">다시 불러오기</button>
           </td>
-        </tr>`;
+        </tr>`);
 
     this.querySelector('.retry-btn').addEventListener(
       'click',
@@ -54,18 +54,19 @@ class PostTable extends HTMLElement {
       if (posts.length === 0) {
         if (isInitialFetch) {
           this.querySelector('tbody').innerHTML =
-            `<div class='content-error'>아직 작성된 게시글이 없습니다.</div>`;
+            `<tr><td colspan="5" 아직 작성된 게시글이 없습니다.</td></tr>`;
         }
         return;
       }
       this.querySelector('tbody').insertAdjacentHTML(
         'beforeend',
-        createPostRows(posts),
+        createEscapeHtml(createPostRows)(posts),
       );
 
       this.#offsetPostID = posts.at(-1).id;
       this.#observe();
     } catch (e) {
+      console.error(e);
       this.#fetchError();
     }
   };
@@ -101,7 +102,8 @@ class PostTable extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.#unobserve();
+    this.#observer.disconnect();
+    this.#observer = null;
   }
 }
 
