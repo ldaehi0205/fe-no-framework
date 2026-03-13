@@ -1,4 +1,5 @@
 import HttpClient from './HttpClient.js';
+import { equalNumbers } from '../utils/common.js';
 
 class PostService extends HttpClient {
   constructor() {
@@ -30,8 +31,10 @@ class PostService extends HttpClient {
     return { posts };
   }
 
-  getPostDetail(id) {
-    return super.get(`/post/${id}.json`);
+  async getPostDetail(id) {
+    const res = await super.get(`/posts.json`);
+    const post = res.posts.find(post => equalNumbers(post.id, id));
+    return post;
   }
 }
 

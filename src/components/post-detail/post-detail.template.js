@@ -1,4 +1,12 @@
-const createPostDetail = ({ title, category, author, date, sections }) => `
+import { formatTimestamp } from '../../utils/common.js';
+
+const createPostDetail = ({
+  title,
+  category,
+  author,
+  created_at,
+  sections,
+}) => `
     <div>
       <div class="post-detail-header">
               <h1 class="post-detail-title">${title}</h1>
@@ -6,7 +14,7 @@ const createPostDetail = ({ title, category, author, date, sections }) => `
             </div>
             <div class="post-detail-meta">
               <div class="post-detail-author">${author}</div>
-              <div class="post-detail-date">${date}</div>
+              <div class="post-detail-date">${formatTimestamp(created_at)}</div>
             </div>
             <div class="post-detail-body">
               <div class="post-detail-section">

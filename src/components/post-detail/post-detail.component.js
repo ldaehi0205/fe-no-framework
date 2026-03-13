@@ -10,7 +10,8 @@ class PostDetail extends HTMLElement {
 
       const post = await PostService.getPostDetail(endpoint);
       this.innerHTML = createEscapeHtml(createPostDetail)(post);
-    } catch {
+    } catch (e) {
+      console.error(e);
       errorBoundary(this);
     }
   }

@@ -16,6 +16,20 @@ export const errorBoundary = component => {
   component.innerHTML = `<div class='content-error'>에러가 발생했습니다.</div>`;
 };
 
+export const formatTimestamp = timestamp => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  return `${year}-${month}-${day}`;
+};
+
+export const equalNumbers = (...args) => {
+  if (args.length === 0) return false;
+  return args.every(num => Number(num) === Number(args[0]));
+};
+
 const escapeHtml = str => {
   return String(str)
     .replace(/&/g, '&amp;')
