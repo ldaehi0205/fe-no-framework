@@ -21,6 +21,10 @@
   cursor: pointer;
 }
 
+.post-table thead .post-id {
+  width: 4rem;
+  text-align: center;
+}
 .post-table thead .post-comments {
   width: 4rem;
   text-align: center;
@@ -38,6 +42,10 @@
   height: 29px;
   padding: 0.75rem 0;
   cursor: pointer;
+}
+
+.post-table .cell-id {
+  text-align: center;
 }
 
 .post-table .cell-comments {
