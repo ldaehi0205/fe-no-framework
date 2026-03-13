@@ -1,7 +1,7 @@
 import createPostDetail from './post-detail.template.js';
 import PostService from '../../api/PostService.js';
 
-import { errorBoundary, createEscapeHtml } from '../../utils/common.js';
+import { errorBoundary, createescapeText } from '../../utils/common.js';
 
 class PostDetail extends HTMLElement {
   async connectedCallback() {
@@ -9,7 +9,9 @@ class PostDetail extends HTMLElement {
       const endpoint = window.location.pathname.split('/').pop();
 
       const post = await PostService.getPostDetail(endpoint);
-      this.innerHTML = createEscapeHtml(createPostDetail)(post);
+      this.innerHTML = createescapeText(createPostDetail)(post);
+      const comment = this.querySelector('post-comment');
+      comment.commentList = post.comment_list;
     } catch (e) {
       console.error(e);
       errorBoundary(this);

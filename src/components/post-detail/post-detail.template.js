@@ -26,15 +26,16 @@ const createPostDetail = ({
               <div class="post-detail-section">
                 <h3 class="post-detail-section-label">내용을 설명해주세요.</h3>
                 <div class="post-detail-section-value">
-							  ${sections.description}
+						  ${sections.description}
                 </div>
               </div>
               <div class="post-detail-section">
                 <h3 class="post-detail-section-label">appName (선택)</h3>
                 <div class="post-detail-section-value">${sections.appName || '없음'}</div>
               </div>
-            </div>
-          </div>
+         </div>       
+				<post-comment></post-comment>     
+      </div>
 `;
 
 export default createPostDetail;

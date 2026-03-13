@@ -5,7 +5,7 @@ import { goToPostDetail } from '../../utils/route.js';
 import {
   getCategoryFromPath,
   errorBoundary,
-  createEscapeHtml,
+  createescapeText,
 } from '../../utils/common.js';
 
 class PostTable extends HTMLElement {
@@ -60,7 +60,7 @@ class PostTable extends HTMLElement {
       }
       this.querySelector('tbody').insertAdjacentHTML(
         'beforeend',
-        createEscapeHtml(createPostRows)(posts),
+        createescapeText(createPostRows)(posts),
       );
 
       this.#offsetPostID = posts.at(-1).id;
