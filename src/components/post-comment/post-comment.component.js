@@ -6,16 +6,58 @@ import {
 import { escapeText, equalNumbers } from '../../utils/common.js';
 
 class PostComment extends HTMLElement {
-  #beforeCommentList = [];
   #commentList = [];
 
   set commentList(comment_list) {
     this.innerHTML = createCommentSection(comment_list);
-    this.#commentList = comment_list;
+
+    const self = this;
+    this.#commentList = new Proxy(comment_list, {
+      get(target, prop, receiver) {
+        if (prop === 'splice') {
+          return (...args) => {
+            const prevTarget = [...target];
+            target.splice(...args);
+            self.render(prevTarget, target);
+            return target;
+          };
+        }
+        if (prop === 'push') {
+          return (...args) => {
+            const prevTarget = [...target];
+            target.push(...args);
+            self.render(prevTarget, target);
+            return target;
+          };
+        }
+
+        return Reflect.get(target, prop, receiver);
+      },
+    });
 
     this.#bindSubmitEvent();
     this.#bindDeleteClickEvent();
   }
+
+  render = (prevList, nextList) => {
+    const beforeIDs = new Set(prevList.map(v => v.id));
+    const currentIDs = new Set(nextList.map(v => v.id));
+
+    const addComment = nextList.find(v => !beforeIDs.has(v.id));
+    const delComment = prevList.find(v => !currentIDs.has(v.id));
+
+    if (delComment) {
+      const delItem = this.querySelector(`#comment-${delComment.id}`);
+      delItem?.remove();
+    }
+
+    if (addComment) {
+      const template = document.createElement('template');
+      template.innerHTML = createCommentItem(addComment);
+      const commentList = this.querySelector('.comment-list');
+      commentList.appendChild(template.content);
+    }
+  };
 
   #bindDeleteClickEvent = () => {
     const commentList = this.querySelector('.comment-list');
@@ -25,12 +67,12 @@ class PostComment extends HTMLElement {
 
       const delelteID = deleteBtn.dataset.commentDeleteId;
 
-      this.#beforeCommentList = [...this.#commentList];
-      this.#commentList = this.#beforeCommentList.filter(
-        ({ id }) => !equalNumbers(id, delelteID),
+      const index = this.#commentList.findIndex(v =>
+        equalNumbers(v.id, delelteID),
       );
 
-      this.#renderRemoveComment();
+      if (index < 0) return;
+      this.#commentList.splice(index, 1);
     });
   };
 
@@ -40,29 +82,8 @@ class PostComment extends HTMLElement {
       e.preventDefault();
 
       this.#submitComment();
-      this.#renderAddComment();
       commentForm.reset();
     });
-  };
-
-  #renderAddComment = () => {
-    const beforeIDs = new Set(this.#beforeCommentList.map(v => v.id));
-    const addComment = this.#commentList.find(v => !beforeIDs.has(v.id));
-    if (!addComment) return;
-
-    const template = document.createElement('template');
-    template.innerHTML = createCommentItem(addComment);
-    const commentList = this.querySelector('.comment-list');
-    commentList.appendChild(template.content);
-  };
-
-  #renderRemoveComment = () => {
-    const currentIDs = new Set(this.#commentList.map(v => v.id));
-    const delComment = this.#beforeCommentList.find(v => !currentIDs.has(v.id));
-
-    if (!delComment) return;
-    const delItem = this.querySelector(`#comment-${delComment.id}`);
-    delItem?.remove();
   };
 
   #submitComment = () => {
@@ -70,14 +91,13 @@ class PostComment extends HTMLElement {
     const content = this.querySelector('.comment-form-textarea');
 
     const comment = {
-      id: Math.floor(Math.random() * 1000), //
+      id: Math.floor(Math.random() * 1000),
       author: escapeText(author.value),
       content: escapeText(content.value),
       created_at: Date.now(),
     };
 
-    this.#beforeCommentList = [...this.#commentList];
-    this.#commentList = [...this.#commentList, comment];
+    this.#commentList.push(comment);
   };
 }
 
