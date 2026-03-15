@@ -6,13 +6,13 @@ import {
 import { escapeText, equalNumbers } from '../../utils/common.js';
 
 class PostComment extends HTMLElement {
-  #commentList = [];
+  #commentListState = [];
 
   set commentList(comment_list) {
     this.innerHTML = createCommentSection(comment_list);
 
     const render = this.#render;
-    this.#commentList = new Proxy(comment_list, {
+    this.#commentListState = new Proxy(comment_list, {
       get(target, prop, receiver) {
         if (prop === 'splice') {
           return (...args) => {
@@ -67,12 +67,12 @@ class PostComment extends HTMLElement {
 
       const delelteID = deleteBtn.dataset.commentDeleteId;
 
-      const index = this.#commentList.findIndex(v =>
+      const index = this.#commentListState.findIndex(v =>
         equalNumbers(v.id, delelteID),
       );
 
       if (index < 0) return;
-      this.#commentList.splice(index, 1);
+      this.#commentListState.splice(index, 1);
     });
   };
 
@@ -97,7 +97,7 @@ class PostComment extends HTMLElement {
       created_at: Date.now(),
     };
 
-    this.#commentList.push(comment);
+    this.#commentListState.push(comment);
   };
 }
 
