@@ -40,11 +40,11 @@ class PostComment extends HTMLElement {
   }
 
   #render = (prevList, nextList) => {
-    const beforeIDs = new Set(prevList.map(v => v.id));
-    const currentIDs = new Set(nextList.map(v => v.id));
+    const prevIDs = new Set(prevList.map(v => v.id));
+    const nextIDs = new Set(nextList.map(v => v.id));
 
-    const addComment = nextList.find(v => !beforeIDs.has(v.id));
-    const delComment = prevList.find(v => !currentIDs.has(v.id));
+    const addComment = nextList.find(v => !prevIDs.has(v.id));
+    const delComment = prevList.find(v => !nextIDs.has(v.id));
 
     if (delComment) {
       const delItem = this.querySelector(`#comment-${delComment.id}`);
