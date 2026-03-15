@@ -11,14 +11,14 @@ class PostComment extends HTMLElement {
   set commentList(comment_list) {
     this.innerHTML = createCommentSection(comment_list);
 
-    const self = this;
+    const render = this.#render;
     this.#commentList = new Proxy(comment_list, {
       get(target, prop, receiver) {
         if (prop === 'splice') {
           return (...args) => {
             const prevTarget = [...target];
             target.splice(...args);
-            self.render(prevTarget, target);
+            render(prevTarget, target);
             return target;
           };
         }
@@ -26,7 +26,7 @@ class PostComment extends HTMLElement {
           return (...args) => {
             const prevTarget = [...target];
             target.push(...args);
-            self.render(prevTarget, target);
+            render(prevTarget, target);
             return target;
           };
         }
@@ -39,7 +39,7 @@ class PostComment extends HTMLElement {
     this.#bindDeleteClickEvent();
   }
 
-  render = (prevList, nextList) => {
+  #render = (prevList, nextList) => {
     const beforeIDs = new Set(prevList.map(v => v.id));
     const currentIDs = new Set(nextList.map(v => v.id));
 
