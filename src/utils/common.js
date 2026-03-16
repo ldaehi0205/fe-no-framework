@@ -16,7 +16,21 @@ export const errorBoundary = component => {
   component.innerHTML = `<div class='content-error'>에러가 발생했습니다.</div>`;
 };
 
-const escapeHtml = str => {
+export const formatTimestamp = timestamp => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}-${month}-${day}`;
+};
+
+export const equalNumbers = (...args) => {
+  if (args.length === 0) return false;
+  return args.every(num => Number(num) === Number(args[0]));
+};
+
+export const escapeText = str => {
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -30,11 +44,11 @@ const deepEscape = obj => {
   if (Array.isArray(obj)) return obj.map(deepEscape);
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => {
-      if (typeof v === 'string') return [k, escapeHtml(v)];
+      if (typeof v === 'string') return [k, escapeText(v)];
       if (v && typeof v === 'object') return [k, deepEscape(v)];
       return [k, v];
     }),
   );
 };
 
-export const createEscapeHtml = fn => data => fn(deepEscape(data));
+export const createEscapeText = fn => data => fn(deepEscape(data));
