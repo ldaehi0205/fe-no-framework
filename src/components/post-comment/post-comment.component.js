@@ -46,6 +46,9 @@ class PostComment extends HTMLElement {
     const addComment = nextList.find(v => !prevIDs.has(v.id));
     const delComment = prevList.find(v => !nextIDs.has(v.id));
 
+    const commentCount = this.querySelector('.comment-count');
+    commentCount.textContent = `${nextList.length}`;
+
     if (delComment) {
       const delItem = this.querySelector(`#comment-${delComment.id}`);
       delItem?.remove();
@@ -65,10 +68,10 @@ class PostComment extends HTMLElement {
       const deleteBtn = e.target.closest('.comment-delete-btn');
       if (!deleteBtn) return;
 
-      const delelteID = deleteBtn.dataset.commentDeleteId;
+      const deleteId = deleteBtn.dataset.commentDeleteId;
 
       const index = this.#commentListState.findIndex(v =>
-        equalNumbers(v.id, delelteID),
+        equalNumbers(v.id, deleteId),
       );
 
       if (index < 0) return;
@@ -92,8 +95,8 @@ class PostComment extends HTMLElement {
 
     const comment = {
       id: Math.floor(Math.random() * 1000),
-      author: escapeText(author.value),
-      content: escapeText(content.value),
+      author: author.value,
+      content: content.value,
       created_at: Date.now(),
     };
 

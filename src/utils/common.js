@@ -51,4 +51,4 @@ const deepEscape = obj => {
   );
 };
 
-export const createescapeText = fn => data => fn(deepEscape(data));
+export const createEscapeText = fn => data => fn(deepEscape(data));
