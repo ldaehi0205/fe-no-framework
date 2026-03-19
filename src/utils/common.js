@@ -52,3 +52,14 @@ const deepEscape = obj => {
 };
 
 export const createEscapeText = fn => data => fn(deepEscape(data));
+
+export const debounce = (callback, delay = 500) => {
+  let timer;
+
+  return e => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback(e);
+    }, delay);
+  };
+};

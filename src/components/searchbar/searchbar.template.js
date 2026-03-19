@@ -20,3 +20,5 @@ const createSearchbar = () => `
         </button>
       </div>
     </div>`;
+
+export default createSearchbar;

@@ -10,8 +10,6 @@ class PostDetail extends HTMLElement {
 
       const post = await PostService.getPostDetail(endpoint);
       this.innerHTML = createEscapeText(createPostDetail)(post);
-      const comment = this.querySelector('post-comment');
-      comment.commentList = post.comment_list;
     } catch (e) {
       console.error(e);
       errorBoundary(this);
