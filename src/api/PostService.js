@@ -6,9 +6,9 @@ class PostService extends HttpClient {
     super();
   }
 
-  async getPosts({ category, offset, id, title }) {
-    // const res = await super.get('/posts');
-    const res = await super.get('/posts');
+  async getPosts({ category, offset, id, title }, options) {
+    // const res = await super.get('/posts.json', options);
+    const res = await super.get('/posts', options);
 
     // 카테고리 필터링
     let posts = category

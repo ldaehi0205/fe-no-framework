@@ -8,6 +8,7 @@ import {
   createEscapeText,
 } from '../../utils/common.js';
 import eventBus from '../../utils/eventBus.js';
+import { getSignal } from '../../utils/abortController.js';
 
 class PostTable extends HTMLElement {
   #offsetPostID = 0;
@@ -45,62 +46,77 @@ class PostTable extends HTMLElement {
     );
   };
 
-  #fetchAndRenderRows = async event => {
+  #setTbodyContent = string => {
+    this.querySelector('tbody').innerHTML = string;
+  };
+
+  #renderSearchResults = (posts, { title }) => {
+    if (title?.length > 0) {
+      if (posts.length === 0) {
+        this.#setTbodyContent(
+          `<tr><td colspan="5">검색된 게시글이 없습니다.</td></tr>`,
+        );
+        return;
+      }
+      this.#setTbodyContent(createEscapeText(createPostRows)(posts));
+      this.#offsetPostID = posts.at(-1).id;
+      this.#observe();
+      return;
+    }
+
+    // 입력된 값 전부 삭제시 offsetPostID 초기화 -> 처음인덱스부터 출력
+    this.#offsetPostID = posts.length > 0 ? posts.at(-1).id : 0;
+    this.#setTbodyContent(createEscapeText(createPostRows)(posts));
+    this.#observe();
+  };
+
+  #renderMorePosts = (posts, { id }) => {
+    if (posts.length === 0) {
+      if (id === 0) {
+        this.#setTbodyContent(
+          `<tr><td colspan="5">아직 작성된 게시글이 없습니다.</td></tr>`,
+        );
+      }
+      return;
+    }
+
+    this.querySelector('tbody').insertAdjacentHTML(
+      'beforeend',
+      createEscapeText(createPostRows)(posts),
+    );
+
+    this.#offsetPostID = posts.at(-1).id;
+    this.#observe();
+  };
+
+  #fetchAndRenderRows = async isSearchEvent => {
     try {
       const category = getCategoryFromPath();
-      const id = event ? 0 : this.#offsetPostID;
+      const id = isSearchEvent ? 0 : this.#offsetPostID;
       const offset = this.#offset;
-      const isInitialFetch = id === 0;
 
       this.#unobserve();
 
       const input = document.querySelector('#post-search-input');
-      const title = input.value || '';
+      const title = input?.value || '';
 
-      const { posts } = await PostService.getPosts({
+      const queryParams = {
         category,
         id,
         offset,
         title,
+      };
+      const { posts } = await PostService.getPosts(queryParams, {
+        signal: getSignal(),
       });
 
       // 검색하여 row 찾는 경우
-      if (event) {
-        // 입력된 값 전부 삭제시 offsetPostID 초기화 -> 처음인덱스부터 출력
-        if (title?.length === 0) {
-          this.#offsetPostID = 0;
-          this.querySelector('tbody').innerHTML = ``;
-        }
-        if (title?.length > 0) {
-          if (posts.length === 0) {
-            this.querySelector('tbody').innerHTML =
-              `<tr><td colspan="5"> 검색된 게시글이 없습니다.</td></tr>`;
-            return;
-          }
-          this.querySelector('tbody').innerHTML =
-            createEscapeText(createPostRows)(posts);
-
-          this.#offsetPostID = posts.at(-1).id;
-          this.#observe();
-          return;
-        }
-      }
-
-      if (posts.length === 0) {
-        if (isInitialFetch) {
-          this.querySelector('tbody').innerHTML =
-            `<tr><td colspan="5"> 아직 작성된 게시글이 없습니다.</td></tr>`;
-        }
+      if (isSearchEvent) {
+        this.#renderSearchResults(posts, queryParams);
         return;
       }
 
-      this.querySelector('tbody').insertAdjacentHTML(
-        'beforeend',
-        createEscapeText(createPostRows)(posts),
-      );
-
-      this.#offsetPostID = posts.at(-1).id;
-      this.#observe();
+      this.#renderMorePosts(posts, queryParams);
     } catch (e) {
       console.error(e);
       this.#fetchError();
@@ -122,8 +138,8 @@ class PostTable extends HTMLElement {
       eventBus.add('fetch', this.#fetchAndRenderRows);
 
       this.#observer = new IntersectionObserver(
-        async (entries, observer) => {
-          if (entries[0].isIntersecting) await eventBus.emit('fetch');
+        entries => {
+          if (entries[0].isIntersecting) eventBus.emit('fetch');
         },
         { threshold: 1.0 },
       );
