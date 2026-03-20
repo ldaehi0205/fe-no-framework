@@ -119,6 +119,7 @@ class PostTable extends HTMLElement {
       this.#renderMorePosts(posts, queryParams);
     } catch (e) {
       console.error(e);
+      if (e.name === 'AbortError') return;
       this.#fetchError();
     }
   };
@@ -156,7 +157,7 @@ class PostTable extends HTMLElement {
   disconnectedCallback() {
     this.#observer.disconnect();
     this.#observer = null;
-    eventBus.remove('fetch');
+    eventBus.remove('fetch', this.#fetchAndRenderRows);
   }
 }
 

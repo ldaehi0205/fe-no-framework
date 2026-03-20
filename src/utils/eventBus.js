@@ -4,15 +4,16 @@ class Eventbus {
   }
 
   add(event, cb) {
-    this.eventListener[event] = cb;
+    this.eventListener[event] = [...this.eventListener[event], cb];
   }
 
-  remove(event) {
-    delete this.eventListener[event];
+  remove(event, cb) {
+    this.eventListener[event] = this.eventListener[event].filter(v => v !== cb);
   }
 
   emit(event, params) {
-    if (!this.eventListener[event]) return;
+    if (this.eventListener[event] && this.eventListener[event]?.length === 0)
+      return;
     this.eventListener[event](params);
   }
 }

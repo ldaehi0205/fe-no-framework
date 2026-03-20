@@ -4,7 +4,7 @@ import {
 } from './post-comment.template.js';
 import PostService from '../../api/PostService.js';
 
-import { equalNumbers } from '../../utils/common.js';
+import { equalNumbers, errorBoundary } from '../../utils/common.js';
 
 class PostComment extends HTMLElement {
   #commentListState = [];
