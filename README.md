@@ -1,6 +1,6 @@
 ## 프로젝트 개요
 
-React, Vue 등의 프레임워크 없이 브라우저 네이티브 API만으로 Web Components기반 SPA(Single Page Application)를 구현한 프로젝트입니다.
+프레임워크, 라이브러리 없이 브라우저 네이티브 API만으로 Web Components기반 SPA(Single Page Application)를 구현한 프로젝트입니다.
 
 ## 주요 기능
 
