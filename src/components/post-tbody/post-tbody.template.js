@@ -16,6 +16,7 @@ const createPostRows = posts => {
 };
 
 const createPostTable = () => `
+		<search-bar></search-bar>    
     <table class="post-table">
       <thead>
         <tr>

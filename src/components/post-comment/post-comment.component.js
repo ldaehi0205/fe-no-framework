@@ -2,41 +2,51 @@ import {
   createCommentSection,
   createCommentItem,
 } from './post-comment.template.js';
+import PostService from '../../api/PostService.js';
 
-import { escapeText, equalNumbers } from '../../utils/common.js';
+import { equalNumbers, errorBoundary } from '../../utils/common.js';
 
 class PostComment extends HTMLElement {
   #commentListState = [];
 
-  set commentList(comment_list) {
-    this.innerHTML = createCommentSection(comment_list);
+  async connectedCallback() {
+    try {
+      const endpoint = window.location.pathname.split('/').pop();
 
-    const render = this.#render;
-    this.#commentListState = new Proxy(comment_list, {
-      get(target, prop, receiver) {
-        if (prop === 'splice') {
-          return (...args) => {
-            const prevTarget = [...target];
-            target.splice(...args);
-            render(prevTarget, target);
-            return target;
-          };
-        }
-        if (prop === 'push') {
-          return (...args) => {
-            const prevTarget = [...target];
-            target.push(...args);
-            render(prevTarget, target);
-            return target;
-          };
-        }
+      const { comment_list } = await PostService.getPostComments(endpoint);
 
-        return Reflect.get(target, prop, receiver);
-      },
-    });
+      this.innerHTML = createCommentSection(comment_list);
 
-    this.#bindSubmitEvent();
-    this.#bindDeleteClickEvent();
+      const render = this.#render;
+      this.#commentListState = new Proxy(comment_list, {
+        get(target, prop, receiver) {
+          if (prop === 'splice') {
+            return (...args) => {
+              const prevTarget = [...target];
+              target.splice(...args);
+              render(prevTarget, target);
+              return target;
+            };
+          }
+          if (prop === 'push') {
+            return (...args) => {
+              const prevTarget = [...target];
+              target.push(...args);
+              render(prevTarget, target);
+              return target;
+            };
+          }
+
+          return Reflect.get(target, prop, receiver);
+        },
+      });
+
+      this.#bindSubmitEvent();
+      this.#bindDeleteClickEvent();
+    } catch (e) {
+      console.error(e);
+      errorBoundary(this);
+    }
   }
 
   #render = (prevList, nextList) => {

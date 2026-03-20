@@ -6,13 +6,18 @@ class PostService extends HttpClient {
     super();
   }
 
-  async getPosts({ category, offset, id }) {
-    const res = await super.get('/posts.json');
+  async getPosts({ category, offset, id, title }, options) {
+    // const res = await super.get('/posts.json', options);
+    const res = await super.get('/posts', options);
 
     // 카테고리 필터링
     let posts = category
       ? res.posts.filter(post => post.category === category)
       : res.posts;
+
+    if (title && title.length > 0) {
+      posts = posts.filter(post => post.title.includes(title));
+    }
 
     // 내림차순 정렬
     posts = [...posts].sort((a, b) => b.id - a.id);
@@ -32,9 +37,19 @@ class PostService extends HttpClient {
   }
 
   async getPostDetail(id) {
-    const res = await super.get(`/posts.json`);
-    const post = res.posts.find(post => equalNumbers(post.id, id));
-    return post;
+    const res = await super.get(`/post/${id}`);
+    return res;
+    // const res = await super.get(`/posts.json`);
+    // const post = res.posts.find(post => equalNumbers(post.id, id));
+    // return post;
+  }
+
+  async getPostComments(id) {
+    const res = await super.get(`/post/${id}/comments`);
+    // const res = await super.get(`/posts.json`);
+    // const post = res.posts.find(post => equalNumbers(post.id, id));
+    // return post;
+    return res;
   }
 }
 

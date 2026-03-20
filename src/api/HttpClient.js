@@ -1,8 +1,9 @@
 class HttpClient {
-  #baseUrl = '/mock';
+  #baseUrl = 'https://post-deo.free.beeceptor.com';
+  // #baseUrl = '/mock';
 
-  async get(url) {
-    const response = await fetch(this.#baseUrl + url);
+  async get(url, options = {}) {
+    const response = await fetch(this.#baseUrl + url, options);
     return response.json();
   }
 
