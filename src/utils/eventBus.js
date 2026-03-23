@@ -4,7 +4,10 @@ class Eventbus {
   }
 
   add(event, cb) {
-    this.eventListener[event] = [...this.eventListener[event], cb];
+    this.eventListener[event] = [
+      ...(this.eventListener[event] ? this.eventListener[event] : []),
+      cb,
+    ];
   }
 
   remove(event, cb) {
@@ -14,7 +17,9 @@ class Eventbus {
   emit(event, params) {
     if (this.eventListener[event] && this.eventListener[event]?.length === 0)
       return;
-    this.eventListener[event](params);
+    this.eventListener[event].forEach(element => {
+      element(params);
+    });
   }
 }
 

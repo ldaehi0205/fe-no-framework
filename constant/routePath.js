@@ -1,10 +1,12 @@
 const Home = '/';
+const Login = '/login';
 const DEV = '/dev';
 const NOTICE = '/notice';
 const POST = '/post';
 
 export const RoutePath = Object.freeze({
   home: Home,
+  login: Login,
   dev: DEV,
   notice: NOTICE,
   post: POST,
